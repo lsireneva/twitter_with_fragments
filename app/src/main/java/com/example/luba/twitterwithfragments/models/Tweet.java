@@ -117,6 +117,15 @@ public class Tweet extends BaseModel {
         return new Select().from(Tweet.class).orderBy(Tweet_Table.tweetId, false).limit(300).queryList();
     }
 
+    @Override
+    public boolean equals(Object object) {
+        if (object != null && object instanceof Tweet) {
+            Tweet tweet = (Tweet) object;
+            return this.getTweetId().equals(tweet.getTweetId());
+        }
+        return false;
+    }
+
 
 
 }

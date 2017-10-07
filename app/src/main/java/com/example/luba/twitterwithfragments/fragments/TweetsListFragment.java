@@ -1,6 +1,5 @@
 package com.example.luba.twitterwithfragments.fragments;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -39,7 +38,7 @@ public abstract class TweetsListFragment extends Fragment {
     protected ArrayList<Tweet> mTweets;
     RecyclerView rvTweets;
     private LinearLayoutManager mLayoutManager;
-    public SwipeRefreshLayout swipeContainer;
+    public SwipeRefreshLayout mSwipeToRefresh;
     View viewFragment;
     DividerItemDecoration mDividerItemDecoration;
     private TwitterActivity activity;
@@ -74,11 +73,15 @@ public abstract class TweetsListFragment extends Fragment {
 
         EndlessRecyclerViewScrollListener endlessListener = new EndlessRecyclerViewScrollListener(mLayoutManager) {
             @Override
-            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                Log.d("DEBUG", "loading page=: " + String.valueOf(page));
-                loadTweets(null, mTweets.get(totalItemsCount - 1).getTweetId());
-
+            public void onLoadMore(int page, int totalItemsCount) {
+                if (CheckNetwork.isOnline()) {
+                    Log.d("DEBUG", "loading page=: " + String.valueOf(page));
+                    Log.d ("DEBUG", "totalItemCount="+totalItemsCount);
+                    Log.d ("DEBUG", "tmTweets.get(totalItemsCount - 1).getTweetId()="+mTweets.get(totalItemsCount - 1).getTweetId());
+                    loadTweets(null, mTweets.get(totalItemsCount - 1).getTweetId());
+                }
             }
+
         };
         rvTweets.addOnScrollListener(endlessListener);
 
@@ -114,8 +117,8 @@ public abstract class TweetsListFragment extends Fragment {
 
 
         // Swipe to refresh
-        swipeContainer = (SwipeRefreshLayout) viewFragment.findViewById(R.id.swipeContainer);
-        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        mSwipeToRefresh = (SwipeRefreshLayout) viewFragment.findViewById(R.id.swipeContainer);
+        mSwipeToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 if (!mTweets.isEmpty()) {
@@ -128,7 +131,7 @@ public abstract class TweetsListFragment extends Fragment {
             }
         });
         // Configure the refreshing colors
-        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_light, android.R.color.holo_blue_dark);
+        mSwipeToRefresh.setColorSchemeResources(android.R.color.holo_blue_light, android.R.color.holo_blue_dark);
     }
 
     protected abstract void loadTweets(Long sinceID, Long maxID);
@@ -148,8 +151,8 @@ public abstract class TweetsListFragment extends Fragment {
 
     protected void processTweets(ArrayList<Tweet> tweets) {
         Log.d ("DEBUG", "processTweets()");
-        if (!tweets.isEmpty()) {
-            if (mTweets.isEmpty()) {
+        if (tweets != null) {
+            if (mTweets == null) {
                 mTweets = new ArrayList<>();
             }
             for (Tweet tweet : tweets) {
@@ -168,7 +171,7 @@ public abstract class TweetsListFragment extends Fragment {
         Log.d ("DEBUG", "mTweets"+mTweets);
         tweetAdapter.notifyDataSetChanged(mTweets);
         // Now we call setRefreshing(false) to signal refresh has finished
-        swipeContainer.setRefreshing(false);
+        mSwipeToRefresh.setRefreshing(false);
     }
 
 
@@ -240,17 +243,6 @@ public abstract class TweetsListFragment extends Fragment {
         mLayoutManager.scrollToPosition(0);
 
     }*/
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof TwitterActivity) {
-            activity = (TwitterActivity) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must extends from BaseActivity");
-        }
-    }
 
 
 

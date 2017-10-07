@@ -1,65 +1,80 @@
 package com.example.luba.twitterwithfragments.activities;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.LinearLayout;
 
 import com.example.luba.twitterwithfragments.R;
 import com.example.luba.twitterwithfragments.adapters.TweetsPagerAdapter;
+import com.example.luba.twitterwithfragments.fragments.NewTweetDialogFragment;
+import com.example.luba.twitterwithfragments.models.Tweet;
 
-public class TwitterActivity extends AppCompatActivity {
+public class TwitterActivity extends BaseActivity implements NewTweetDialogFragment.OnNewTweetDialogFragmentListener {
 
     protected Toolbar toolbar;
     protected AppBarLayout appBarLayout;
-
-
+    LinearLayout tabsContainer;
+    FloatingActionButton fabCompose;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_twitter);
-
-        setupUI();
-
-    }
-
-    private void setupUI() {
-
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-
-        if (toolbar != null) {
-            setSupportActionBar(toolbar);
-            getSupportActionBar().setLogo(R.drawable.ic_twitter);
-            /*if (getSupportActionBar() != null) {
-                if (!isTaskRoot()) {
-                    getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-                    getSupportActionBar().setDisplayShowHomeEnabled(true);
-                }
-            }
-            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onBackPressed();
-                }
-            });*/
-            appBarLayout = (AppBarLayout) findViewById(R.id.app_bar_layout);
-        }
-
+    protected void setupUI() {
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        tabsContainer = findViewById(R.id.tabs_container);
+        fabCompose = findViewById(R.id.fabCompose);
         //get the view pager
         ViewPager vpPager = (ViewPager) findViewById(R.id.viewpager);
         TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
         //set the adapter for the pager
         vpPager.setAdapter(new TweetsPagerAdapter(getSupportFragmentManager(), this));
         //set up the TabLayout to use the view pager
-
         tabLayout.setupWithViewPager(vpPager);
+        vpPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                fabCompose.setVisibility(position == 1 ? View.GONE : View.VISIBLE);
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
+        fabCompose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("DEBUG", "fabCompose.setOnClickListener");
+                FragmentManager fm = getSupportFragmentManager();
+                NewTweetDialogFragment fragment = new NewTweetDialogFragment();
+                fragment.show(fm, "compose_tweet");
+            }
+        });
+
+    }
+
+    @Override
+    protected void loadData() {
+
+    }
+
+    @Override
+    protected int getLayoutResourceID() {
+        return R.layout.activity_twitter;
     }
 
     @Override
@@ -72,5 +87,21 @@ public class TwitterActivity extends AppCompatActivity {
         //launch the profile view
         Intent intent = new Intent (this, ProfileActivity.class);
         startActivity(intent);
+    }
+
+    public void onMessagesView(MenuItem item) {
+        //launch the profile view
+        Intent intent = new Intent (this, MessagesActivity.class);
+        startActivity(intent);
+    }
+
+    @Override
+    public void onTimeLineChanged(Tweet tweet) {
+        //mTweets.add(0, tweet);
+        //tweetAdapter.notifyDataSetChanged(mTweets);
+        //mLayoutManager.scrollToPosition(0);
+    }
+
+    public void onSearch(MenuItem item) {
     }
 }

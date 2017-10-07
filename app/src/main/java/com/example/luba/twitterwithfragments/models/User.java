@@ -39,6 +39,28 @@ public class User extends BaseModel {
     public String profileImageUrl;
 
 
+    @SerializedName("profile_background_image_url")
+    @Column(name = "profile_background_image_url")
+    public String profileBackgroundImageUrl;
+
+    @SerializedName("profile_banner_url")
+    @Column(name = "profile_banner_url")
+    String profileBannerUrl;
+
+
+    @SerializedName("followers_count")
+    @Column(name = "followers_count")
+    int followersCount;
+
+    @SerializedName("friends_count")
+    @Column(name = "friends_count")
+    int friendsCount;
+
+    @SerializedName("description")
+    @Column(name = "description")
+    String description;
+
+
 
     public String getName() {
         return name;
@@ -75,6 +97,50 @@ public class User extends BaseModel {
 
     public void setProfileImageUrl(String profileImageUrl) {
         this.profileImageUrl = profileImageUrl;
+    }
+
+    public String getprofileBackgroundImageUrl() {
+        return profileBackgroundImageUrl;
+    }
+
+    public void setprofileBackgroundImageUrl(String profileBackgroundImageUrl) {
+        this.profileBackgroundImageUrl = profileBackgroundImageUrl;
+    }
+
+    public String getProfileBannerUrl() {
+        return profileBannerUrl;
+    }
+
+    public void setProfileBannerUrl(String profileBannerUrl) {
+        this.profileBannerUrl = profileBannerUrl;
+    }
+
+    public boolean hasProfileBackgroundImage() {
+        return profileBackgroundImageUrl != null && !"".equals(profileBackgroundImageUrl);
+    }
+
+    public int getFollowersCount() {
+        return followersCount;
+    }
+
+    public void setFollowersCount(int followersCount) {
+        this.followersCount = followersCount;
+    }
+
+    public int getFriendsCount() {
+        return friendsCount;
+    }
+
+    public void setFriendsCount(int friendsCount) {
+        this.friendsCount = friendsCount;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     // Record Finders

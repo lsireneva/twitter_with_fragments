@@ -4,10 +4,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
+import android.widget.Toast;
 
 import com.codepath.oauth.OAuthLoginActionBarActivity;
 import com.example.luba.twitterwithfragments.R;
+import com.example.luba.twitterwithfragments.TwitterApplication;
+import com.example.luba.twitterwithfragments.UserInfo;
+import com.example.luba.twitterwithfragments.models.User;
+import com.example.luba.twitterwithfragments.network.CheckNetwork;
 import com.example.luba.twitterwithfragments.network.TwitterClient;
+import com.example.luba.twitterwithfragments.network.callbacks.UserCredentialsCallback;
 
 /**
  * Created by luba on 10/3/17.
@@ -34,6 +40,29 @@ public class LoginActivity extends OAuthLoginActionBarActivity<TwitterClient> {
     // i.e Display application "homepage"
     @Override
     public void onLoginSuccess() {
+
+        if (CheckNetwork.isOnline()) {
+            TwitterClient mTwitterClient = TwitterApplication.getRestClient();
+            Toast.makeText(LoginActivity.this, "Loading user credentials", Toast.LENGTH_SHORT).show();
+            mTwitterClient.getUserCredentials(new UserCredentialsCallback() {
+                @Override
+                public void onSuccess(User user) {
+                    if (user != null) {
+                        UserInfo.getInstance().setUserInfo(user);
+                    }
+                }
+
+                @Override
+                public void onError(Error error) {
+                    Toast.makeText(LoginActivity.this, error.getMessage(), Toast.LENGTH_LONG).show();
+                }
+
+            });
+
+        } else {
+            // Get profile from shared preferences
+
+        }
         Intent i = new Intent(this, TwitterActivity.class);
         startActivity(i);
     }

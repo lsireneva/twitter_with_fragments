@@ -28,7 +28,7 @@ public class HomeTimeLineFragment extends TweetsListFragment {
             @Override
             public void onSuccess(ArrayList<Tweet> tweets) {
                 // Save in database
-                saveTweetsToDB(tweets);
+                //saveTweetsToDB(tweets);
                 processTweets(tweets);
                 Log.d ("DEBUG", "processTweets(tweets);"+tweets);
             }
@@ -36,7 +36,7 @@ public class HomeTimeLineFragment extends TweetsListFragment {
             @Override
             public void onError(Error error) {
                 Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_LONG).show();
-                swipeContainer.setRefreshing(false);
+                mSwipeToRefresh.setRefreshing(false);
             }
         });
 

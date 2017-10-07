@@ -1,6 +1,5 @@
 package com.example.luba.twitterwithfragments.fragments;
 
-import android.util.Log;
 import android.widget.Toast;
 
 import com.example.luba.twitterwithfragments.models.Tweet;
@@ -24,16 +23,14 @@ public class MentionsTimeLineFragment extends TweetsListFragment {
         mTwitterClient.getMentionsTimeline(request, new TimelineCallback() {
             @Override
             public void onSuccess(ArrayList<Tweet> tweets) {
-                // Save in database
-                //saveTweetsToDB(tweets);
                 processTweets(tweets);
-                Log.d ("DEBUG", "processTweets(tweets);"+tweets);
+
             }
 
             @Override
             public void onError(Error error) {
                 Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_LONG).show();
-                swipeContainer.setRefreshing(false);
+                mSwipeToRefresh.setRefreshing(false);
             }
         });
     }

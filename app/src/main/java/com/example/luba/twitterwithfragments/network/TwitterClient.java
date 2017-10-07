@@ -5,10 +5,13 @@ import android.util.Log;
 
 import com.codepath.oauth.OAuthBaseClient;
 import com.example.luba.twitterwithfragments.R;
+import com.example.luba.twitterwithfragments.models.Message;
 import com.example.luba.twitterwithfragments.models.Tweet;
 import com.example.luba.twitterwithfragments.models.User;
-import com.example.luba.twitterwithfragments.network.callbacks.TimelineCallback;
+import com.example.luba.twitterwithfragments.network.callbacks.MessagesCallback;
+import com.example.luba.twitterwithfragments.network.callbacks.NewPostMessageCallback;
 import com.example.luba.twitterwithfragments.network.callbacks.NewPostTweetCallback;
+import com.example.luba.twitterwithfragments.network.callbacks.TimelineCallback;
 import com.example.luba.twitterwithfragments.network.callbacks.UserCredentialsCallback;
 import com.github.scribejava.apis.TwitterApi;
 import com.github.scribejava.core.builder.api.BaseApi;
@@ -157,7 +160,9 @@ public class TwitterClient extends OAuthBaseClient {
         client.get(apiUrl, params, new TextHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                Gson gson = new GsonBuilder().create();
+                Gson gson = new GsonBuilder()
+                        .registerTypeAdapter(Date.class, new DeserializerDate())
+                        .create();
                 ArrayList<Tweet> tweets = gson.fromJson(responseString,
                         new TypeToken<ArrayList<Tweet>>() {
                         }.getType());
@@ -171,9 +176,71 @@ public class TwitterClient extends OAuthBaseClient {
         });
     }
 
+    public void getMessages(TimelineRequest request, final MessagesCallback callback) {
+        String apiUrl = getApiUrl("direct_messages.json");
+
+        RequestParams params = new RequestParams();
+        if (request != null) {
+            params.put("count", request.getCount());
+            if (request.getSinceId() != null) {
+                params.put("since_id", request.getSinceId());
+            }
+            if (request.getMaxId() != null) {
+                params.put("max_id", request.getMaxId());
+            }
+        }
+
+        client.get(apiUrl, params, new TextHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                Gson gson = new GsonBuilder()
+                        .registerTypeAdapter(Date.class, new DeserializerDate())
+                        .create();
+                ArrayList<Message> messages = gson.fromJson(responseString,
+                        new TypeToken<ArrayList<Message>>() {
+                        }.getType());
+                callback.onSuccess(messages);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                callback.onError(new Error(throwable != null ? throwable.getMessage() : null));
+            }
+        });
+    }
+
+    public void postMessages(NewMessageRequest request, final NewPostMessageCallback callback) {
+        String apiUrl = getApiUrl("direct_messages/new.json");
+
+        RequestParams params = new RequestParams();
+        if (request != null) {
+            if (request.getTextOfMessage() != null && !"".equals(request.getTextOfMessage())) {
+                params.put("text", request.getTextOfMessage());
+            }
+            if (request.getScreenName() != null && !"".equals(request.getScreenName())) {
+                params.put("screen_name", request.getScreenName());
+            }
+        }
+        Log.d ("DEBUG", "params"+params);
+
+        client.post(apiUrl, params, new TextHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                Gson gson = new GsonBuilder()
+                        .registerTypeAdapter(Date.class, new DeserializerDate())
+                        .create();
+                Message message = gson.fromJson(responseString, Message.class);
+                callback.onSuccess(message);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                callback.onError(new Error(throwable != null ? throwable.getMessage() : null));
+            }
+        });
+    }
 
     //Create new post
-
     public void postNewTweet(NewTweetRequest request, final NewPostTweetCallback callback) {
         String apiUrl = getApiUrl("statuses/update.json");
 
@@ -183,6 +250,7 @@ public class TwitterClient extends OAuthBaseClient {
                 params.put("status", request.getStatus());
             }
         }
+        Log.d ("DEBUG", "params"+params);
 
         client.post(apiUrl, params, new TextHttpResponseHandler() {
             @Override

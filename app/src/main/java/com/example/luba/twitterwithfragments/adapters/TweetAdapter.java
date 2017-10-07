@@ -2,7 +2,6 @@ package com.example.luba.twitterwithfragments.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -133,7 +132,7 @@ public class TweetAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             tvBody.setText(tweet.getText());
 
             tvCreatedAt.setText(tweet.getRelativeTimeAgo());
-            Log.d("DEBUG", "createdAt"+tweet.getRelativeTimeAgo());
+            //Log.d("DEBUG", "createdAt"+tweet.getRelativeTimeAgo());
 
             Glide.with(context).load(tweet.getUser().getProfileImageUrl()).into(ivProfileImage);
 
