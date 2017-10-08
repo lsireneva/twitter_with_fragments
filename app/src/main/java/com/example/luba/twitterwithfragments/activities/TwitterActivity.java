@@ -15,6 +15,7 @@ import android.widget.LinearLayout;
 
 import com.example.luba.twitterwithfragments.R;
 import com.example.luba.twitterwithfragments.adapters.TweetsPagerAdapter;
+import com.example.luba.twitterwithfragments.fragments.HomeTimeLineFragment;
 import com.example.luba.twitterwithfragments.fragments.NewTweetDialogFragment;
 import com.example.luba.twitterwithfragments.models.Tweet;
 
@@ -24,6 +25,9 @@ public class TwitterActivity extends BaseActivity implements NewTweetDialogFragm
     protected AppBarLayout appBarLayout;
     LinearLayout tabsContainer;
     FloatingActionButton fabCompose;
+    TweetsPagerAdapter adapterViewPager;
+    ViewPager vpPager;
+
 
     @Override
     protected void setupUI() {
@@ -31,10 +35,11 @@ public class TwitterActivity extends BaseActivity implements NewTweetDialogFragm
         tabsContainer = findViewById(R.id.tabs_container);
         fabCompose = findViewById(R.id.fabCompose);
         //get the view pager
-        ViewPager vpPager = (ViewPager) findViewById(R.id.viewpager);
+        vpPager = (ViewPager) findViewById(R.id.viewpager);
         TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
+        adapterViewPager = new TweetsPagerAdapter(getSupportFragmentManager(), this);
         //set the adapter for the pager
-        vpPager.setAdapter(new TweetsPagerAdapter(getSupportFragmentManager(), this));
+        vpPager.setAdapter(adapterViewPager);
         //set up the TabLayout to use the view pager
         tabLayout.setupWithViewPager(vpPager);
         vpPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -97,9 +102,9 @@ public class TwitterActivity extends BaseActivity implements NewTweetDialogFragm
 
     @Override
     public void onTimeLineChanged(Tweet tweet) {
-        //mTweets.add(0, tweet);
-        //tweetAdapter.notifyDataSetChanged(mTweets);
-        //mLayoutManager.scrollToPosition(0);
+        Log.d ("DEBUG", "onTimeLineChanged"+ tweet);
+        HomeTimeLineFragment fragment = (HomeTimeLineFragment) adapterViewPager.getRegisteredFragment(0);
+        fragment.insertTweetAtTop(tweet);
     }
 
     public void onSearch(MenuItem item) {

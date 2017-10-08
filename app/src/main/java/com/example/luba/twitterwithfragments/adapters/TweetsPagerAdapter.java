@@ -3,7 +3,6 @@ package com.example.luba.twitterwithfragments.adapters;
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 
 import com.example.luba.twitterwithfragments.fragments.HomeTimeLineFragment;
 import com.example.luba.twitterwithfragments.fragments.MentionsTimeLineFragment;
@@ -12,7 +11,9 @@ import com.example.luba.twitterwithfragments.fragments.MentionsTimeLineFragment;
  * Created by luba on 10/3/17.
  */
 
-public class TweetsPagerAdapter extends FragmentPagerAdapter {
+public class TweetsPagerAdapter extends SmartFragmentStatePagerAdapter {
+
+    private static int NUM_ITEMS = 2;
 
     private String tabTitles[] = new String[] {"Home", "Mentions"};
     private Context context;
@@ -26,7 +27,7 @@ public class TweetsPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        return 2;
+        return NUM_ITEMS;
     }
 
     //return fragment to use depending to the position

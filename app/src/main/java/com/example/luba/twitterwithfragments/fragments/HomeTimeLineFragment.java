@@ -41,4 +41,9 @@ public class HomeTimeLineFragment extends TweetsListFragment {
         });
 
     }
+
+    @Override
+    public void insertTweetAtTop(Tweet tweet) {
+        super.insertTweetAtTop(tweet);
+    }
 }

@@ -236,13 +236,12 @@ public abstract class TweetsListFragment extends Fragment {
 
     }
 
-    /*@Override
-    public void onTimeLineChanged(Tweet tweet) {
+    public void insertTweetAtTop (Tweet tweet) {
         mTweets.add(0, tweet);
         tweetAdapter.notifyDataSetChanged(mTweets);
         mLayoutManager.scrollToPosition(0);
 
-    }*/
+    }
 
 
 
