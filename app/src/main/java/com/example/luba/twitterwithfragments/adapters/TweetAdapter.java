@@ -1,15 +1,22 @@
 package com.example.luba.twitterwithfragments.adapters;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.example.luba.twitterwithfragments.R;
+import com.example.luba.twitterwithfragments.models.Media;
 import com.example.luba.twitterwithfragments.models.Tweet;
 
 import java.util.ArrayList;
@@ -35,8 +42,8 @@ public class TweetAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
 
     //pas in the Tweets array in the constructor
-    public TweetAdapter (ArrayList<Tweet> twwets, OnTweetAdapterListener listener) {
-        this.mTweets = twwets;
+    public TweetAdapter (ArrayList<Tweet> twets, OnTweetAdapterListener listener) {
+        this.mTweets = twets;
         this.mListener = listener;
     }
 
@@ -44,10 +51,28 @@ public class TweetAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        context = parent.getContext();
+        /*context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
         View tweetView = inflater.inflate(R.layout.item_tweet, parent,false);
         TweetViewHolder viewHolder = new TweetViewHolder(tweetView);
+        return viewHolder;*/
+
+        RecyclerView.ViewHolder viewHolder;
+
+        switch (viewType) {
+            case TWEET:
+                View viewPopularMovie = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_tweet, parent, false);
+                viewHolder = new TweetViewHolder(viewPopularMovie);
+                break;
+            case PHOTO_TWEET:
+                View viewLessPopularMovie = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_photo_tweet, parent, false);
+                viewHolder = new TweetPhotoViewHolder(viewLessPopularMovie);
+                break;
+            default:
+                View viewLessPopularMovieDefault = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_tweet, parent, false);
+                viewHolder = new TweetViewHolder(viewLessPopularMovieDefault);
+                break;
+        }
         return viewHolder;
     }
 
@@ -55,10 +80,12 @@ public class TweetAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
-
         switch (holder.getItemViewType()) {
             case TWEET:
                 ((TweetViewHolder) holder).setupTweetView(mTweets.get(position));
+                break;
+            case PHOTO_TWEET:
+                ((TweetPhotoViewHolder) holder).setupTweetView(mTweets.get(position));
                 break;
         }
 
@@ -73,7 +100,16 @@ public class TweetAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     @Override
     public int getItemViewType(int position) {
         Tweet tweet = mTweets.get(position);
-        return TWEET;
+        Log.d("DEBUG", "tweet"+tweet);
+        //if (tweet.hasVideo()) {
+          //  return VIDEO_TWEET;
+        //} else
+        if (tweet.hasPhoto()) {
+            Log.d("DEBUG", "tweet.hasPhoto()"+tweet.hasPhoto());
+            return PHOTO_TWEET;
+        } else {
+            return TWEET;
+        }
 
     }
 
@@ -134,10 +170,56 @@ public class TweetAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             tvCreatedAt.setText(tweet.getRelativeTimeAgo());
             //Log.d("DEBUG", "createdAt"+tweet.getRelativeTimeAgo());
 
-            Glide.with(context).load(tweet.getUser().getProfileImageUrl()).into(ivProfileImage);
+            Glide.with(ivProfileImage.getContext()).load(tweet.getUser().getProfileImageUrl()).into(ivProfileImage);
 
 
 
+        }
+    }
+
+    public class TweetPhotoViewHolder extends TweetViewHolder {
+
+        ImageView ivPhoto;
+
+        ProgressBar pbImage;
+
+        public TweetPhotoViewHolder(View itemView) {
+            super(itemView);
+            ivPhoto = (ImageView) itemView.findViewById(R.id.iv_photo);
+            pbImage = itemView.findViewById(R.id.pb_image);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (mListener != null) mListener.selectedTweet(tweet);
+                }
+            });
+        }
+
+        public void setupTweetView(Tweet tweet) {
+            super.setupTweetView(tweet);
+
+            pbImage.setVisibility(View.VISIBLE);
+            ivPhoto.setImageDrawable(null);
+
+            Media photo = tweet.getPhoto();
+            //ivPhoto.setHeightRatio(((double) photo.getSize().getHeight()) / photo.getSize().getWidth());
+
+            Glide.with(ivPhoto.getContext())
+                    .load(photo.getMediaUrl())
+                    .placeholder(R.drawable.ic_twitter)
+                    .into(new SimpleTarget<GlideDrawable>() {
+                        @Override
+                        public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> glideAnimation) {
+                            ivPhoto.setImageDrawable(resource);
+                            pbImage.setVisibility(View.GONE);
+                        }
+
+                        @Override
+                        public void onLoadFailed(Exception e, Drawable errorDrawable) {
+                            Log.d("DEBUG", e.getMessage());
+                        }
+                    });
         }
     }
 }

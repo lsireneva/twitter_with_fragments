@@ -176,6 +176,43 @@ public class TwitterClient extends OAuthBaseClient {
         });
     }
 
+    public void getUserFavorites(TimelineRequest request,
+                                final TimelineCallback callback) {
+        String apiUrl = getApiUrl("favorites/list.json");
+
+        RequestParams params = new RequestParams();
+        if (request != null) {
+            if (request.getSinceId() != null) {
+                params.put("since_id", request.getSinceId());
+            }
+            if (request.getMaxId() != null) {
+                params.put("max_id", request.getMaxId());
+            }
+            if (request.getUserId() != null) {
+                params.put("user_id", request.getUserId());
+            }
+        }
+
+        client.get(apiUrl, params, new TextHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                Gson gson = new GsonBuilder()
+                        .registerTypeAdapter(Date.class, new DeserializerDate())
+                        .create();
+                ArrayList<Tweet> tweets = gson.fromJson(responseString,
+                        new TypeToken<ArrayList<Tweet>>() {
+                        }.getType());
+                callback.onSuccess(tweets);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                callback.onError(new Error(throwable != null ? throwable.getMessage() : null));
+            }
+        });
+    }
+
+
     public void getMessages(TimelineRequest request, final MessagesCallback callback) {
         String apiUrl = getApiUrl("direct_messages.json");
 

@@ -63,4 +63,5 @@ public class Media {
     public boolean typePhoto() {
         return type != null && "photo".equals(type);
     }
+
 }

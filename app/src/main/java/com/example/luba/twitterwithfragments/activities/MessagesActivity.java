@@ -72,7 +72,7 @@ public class MessagesActivity extends BaseActivity implements MessagesAdapter.On
             }
         });
         rvMessages.setAdapter(mAdapter);
-        
+
         mSwipeToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {

@@ -168,7 +168,7 @@ public abstract class TweetsListFragment extends Fragment {
                 }
             });
         }
-        Log.d ("DEBUG", "mTweets"+mTweets);
+        //Log.d ("DEBUG", "mTweets"+mTweets);
         tweetAdapter.notifyDataSetChanged(mTweets);
         // Now we call setRefreshing(false) to signal refresh has finished
         mSwipeToRefresh.setRefreshing(false);

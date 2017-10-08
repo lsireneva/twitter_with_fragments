@@ -45,6 +45,13 @@ public class Tweet extends BaseModel {
     @Column(name = "created_at")
     Date createdAt;
 
+    @SerializedName("entities")
+    Entities entities;
+
+
+
+
+
     public Tweet() {
         super();
     }
@@ -106,6 +113,24 @@ public class Tweet extends BaseModel {
     public void setUser(User user) {
         this.user = user;
     }
+
+    public Entities getEntities() {
+        return entities;
+    }
+
+    public void setEntities(Entities entities) {
+        this.entities = entities;
+    }
+
+    public boolean hasPhoto() {
+        return entities != null && entities.hasPhoto();
+    }
+
+    public Media getPhoto() {
+        return entities.getPhoto();
+    }
+
+
 
 
     // Record Finders

@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import com.example.luba.twitterwithfragments.fragments.UserFavoritesFragment;
 import com.example.luba.twitterwithfragments.fragments.UserTimelineFragment;
 
 /**
@@ -35,9 +36,9 @@ public class ProfilePagerAdapter extends FragmentPagerAdapter {
             case 0:
                 return new UserTimelineFragment();
             case 1:
-                return new UserTimelineFragment();
+                return new UserFavoritesFragment();
             case 2:
-                return new UserTimelineFragment();
+                return new UserFavoritesFragment();
             default:
                 return new UserTimelineFragment();
         }
