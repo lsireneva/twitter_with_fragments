@@ -1,6 +1,7 @@
 package com.example.luba.twitterwithfragments.activities;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -39,6 +40,11 @@ public class MessagesActivity extends BaseActivity implements MessagesAdapter.On
     DividerItemDecoration mDividerItemDecoration;
     FloatingActionButton fabNewMessage;
 
+
+    @Override
+    protected void setupBundle(Bundle extras) {
+
+    }
 
     @Override
     protected void setupUI() {

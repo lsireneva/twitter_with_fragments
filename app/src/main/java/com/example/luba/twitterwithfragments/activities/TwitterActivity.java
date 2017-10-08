@@ -1,6 +1,7 @@
 package com.example.luba.twitterwithfragments.activities;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
@@ -14,10 +15,14 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 import com.example.luba.twitterwithfragments.R;
+import com.example.luba.twitterwithfragments.UserInfo;
 import com.example.luba.twitterwithfragments.adapters.TweetsPagerAdapter;
 import com.example.luba.twitterwithfragments.fragments.HomeTimeLineFragment;
 import com.example.luba.twitterwithfragments.fragments.NewTweetDialogFragment;
 import com.example.luba.twitterwithfragments.models.Tweet;
+import com.example.luba.twitterwithfragments.models.User;
+
+import org.parceler.Parcels;
 
 public class TwitterActivity extends BaseActivity implements NewTweetDialogFragment.OnNewTweetDialogFragmentListener {
 
@@ -28,6 +33,12 @@ public class TwitterActivity extends BaseActivity implements NewTweetDialogFragm
     TweetsPagerAdapter adapterViewPager;
     ViewPager vpPager;
 
+
+
+    @Override
+    protected void setupBundle(Bundle extras) {
+
+    }
 
     @Override
     protected void setupUI() {
@@ -90,7 +101,9 @@ public class TwitterActivity extends BaseActivity implements NewTweetDialogFragm
 
     public void onProfileView(MenuItem item) {
         //launch the profile view
+        User user = UserInfo.getInstance().getUserInfo();
         Intent intent = new Intent (this, ProfileActivity.class);
+        intent.putExtra(ProfileActivity.USER, Parcels.wrap(user));
         startActivity(intent);
     }
 
@@ -103,8 +116,8 @@ public class TwitterActivity extends BaseActivity implements NewTweetDialogFragm
     @Override
     public void onTimeLineChanged(Tweet tweet) {
         Log.d ("DEBUG", "onTimeLineChanged"+ tweet);
-        HomeTimeLineFragment fragment = (HomeTimeLineFragment) adapterViewPager.getRegisteredFragment(0);
-        fragment.insertTweetAtTop(tweet);
+        HomeTimeLineFragment fragmentHomeTimeLine = (HomeTimeLineFragment) adapterViewPager.getRegisteredFragment(0);
+        fragmentHomeTimeLine.insertTweetAtTop(tweet);
     }
 
     public void onSearch(MenuItem item) {

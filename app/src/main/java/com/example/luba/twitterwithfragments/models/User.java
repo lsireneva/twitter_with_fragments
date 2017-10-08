@@ -10,6 +10,7 @@ import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.parceler.Parcel;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -59,6 +60,9 @@ public class User extends BaseModel {
     @SerializedName("description")
     @Column(name = "description")
     String description;
+
+    @SerializedName("created_at")
+    Date createdAt;
 
 
 
@@ -141,6 +145,14 @@ public class User extends BaseModel {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
     }
 
     // Record Finders

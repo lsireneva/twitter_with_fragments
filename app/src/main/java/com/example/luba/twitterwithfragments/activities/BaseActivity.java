@@ -23,12 +23,18 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(getLayoutResourceID());
-
         mTwitterClient = TwitterApplication.getRestClient();
 
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            setupBundle(extras);
+        }
+        
         setupUI();
         loadData();
     }
+
+    protected abstract void setupBundle(Bundle extras);
 
     @Override
     public void setContentView(@LayoutRes int layoutResID) {

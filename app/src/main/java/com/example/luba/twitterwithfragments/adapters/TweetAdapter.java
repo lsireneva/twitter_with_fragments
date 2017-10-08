@@ -18,6 +18,7 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.example.luba.twitterwithfragments.R;
 import com.example.luba.twitterwithfragments.models.Media;
 import com.example.luba.twitterwithfragments.models.Tweet;
+import com.example.luba.twitterwithfragments.models.User;
 
 import java.util.ArrayList;
 
@@ -35,6 +36,7 @@ public class TweetAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     public interface OnTweetAdapterListener {
         void selectedTweet(Tweet tweet);
         void replySelectedTweet(Tweet tweet);
+        void selectedUser(User user);
     }
 
 
@@ -153,6 +155,13 @@ public class TweetAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 @Override
                 public void onClick(View view) {
                     if (mListener != null) mListener.replySelectedTweet(tweet);
+                }
+            });
+
+            ivProfileImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (mListener != null) mListener.selectedUser(tweet.getUser());
                 }
             });
 

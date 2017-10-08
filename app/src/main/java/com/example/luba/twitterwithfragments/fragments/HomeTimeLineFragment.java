@@ -1,5 +1,6 @@
 package com.example.luba.twitterwithfragments.fragments;
 
+import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -14,7 +15,10 @@ import java.util.ArrayList;
  */
 
 public class HomeTimeLineFragment extends TweetsListFragment {
+    @Override
+    protected void setupArguments(Bundle arguments) {
 
+    }
 
     @Override
     protected void loadTweets(Long sinceID, Long maxID) {

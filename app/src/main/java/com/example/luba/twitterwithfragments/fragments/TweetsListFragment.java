@@ -1,5 +1,7 @@
 package com.example.luba.twitterwithfragments.fragments;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -15,6 +17,8 @@ import android.widget.Toast;
 
 import com.example.luba.twitterwithfragments.R;
 import com.example.luba.twitterwithfragments.TwitterApplication;
+import com.example.luba.twitterwithfragments.activities.ProfileActivity;
+import com.example.luba.twitterwithfragments.activities.TweetDetailActivity;
 import com.example.luba.twitterwithfragments.activities.TwitterActivity;
 import com.example.luba.twitterwithfragments.adapters.TweetAdapter;
 import com.example.luba.twitterwithfragments.models.Tweet;
@@ -22,6 +26,8 @@ import com.example.luba.twitterwithfragments.models.User;
 import com.example.luba.twitterwithfragments.network.CheckNetwork;
 import com.example.luba.twitterwithfragments.network.TwitterClient;
 import com.example.luba.twitterwithfragments.utils.EndlessRecyclerViewScrollListener;
+
+import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -32,6 +38,8 @@ import java.util.Comparator;
  */
 
 public abstract class TweetsListFragment extends Fragment {
+
+    public static final String USER = "USER";
 
     protected TwitterClient mTwitterClient;
     protected TweetAdapter tweetAdapter;
@@ -48,8 +56,12 @@ public abstract class TweetsListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         viewFragment = inflater.inflate(getLayout(),container, false);
-
         mTwitterClient = TwitterApplication.getRestClient();
+
+        if (getArguments() != null) {
+            setupArguments(getArguments());
+        }
+
 
         setupUI();
         showTweets();
@@ -57,6 +69,8 @@ public abstract class TweetsListFragment extends Fragment {
         return viewFragment;
 
     }
+
+    protected abstract void setupArguments(Bundle arguments);
 
     private void setupUI() {
         //find the RecyclerView
@@ -89,7 +103,7 @@ public abstract class TweetsListFragment extends Fragment {
         tweetAdapter = new TweetAdapter(mTweets, new TweetAdapter.OnTweetAdapterListener() {
             @Override
             public void selectedTweet(Tweet tweet) {
-                //openTweetDetails(tweet);
+                openTweetDetails(tweet);
 
             }
 
@@ -109,6 +123,11 @@ public abstract class TweetsListFragment extends Fragment {
                     Toast.makeText(TimelineActivity.this, getString(Integer.parseInt("No internet connection")), Toast.LENGTH_SHORT).show();
                 }*/
 
+            }
+
+            @Override
+            public void selectedUser(User user) {
+                openProfile(user);
             }
         });
         //set adapter
@@ -133,6 +152,48 @@ public abstract class TweetsListFragment extends Fragment {
         // Configure the refreshing colors
         mSwipeToRefresh.setColorSchemeResources(android.R.color.holo_blue_light, android.R.color.holo_blue_dark);
     }
+
+    private void openProfile(User user) {
+        if (!CheckNetwork.isOnline()) {
+            Toast.makeText(getActivity(), "No internet conntection", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        //if (getActivity() instanceof ProfileActivity) {
+          //  if (((ProfileActivity) getActivity()).get.equals(user)) {
+            //    return;
+            //}
+        //}
+        Intent intent = new Intent(getActivity(), ProfileActivity.class);
+        intent.putExtra(ProfileActivity.USER, Parcels.wrap(user));
+        startActivity(intent);
+    }
+
+    private void openTweetDetails(Tweet tweet) {
+
+        Intent intent = new Intent(getActivity(), TweetDetailActivity.class);
+        intent.putExtra(TweetDetailActivity.TWEET, Parcels.wrap(tweet));
+        startActivityForResult(intent, TweetDetailActivity.REQUEST_CODE);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d ("DEBUG", "onActivityResult()");
+        // Check which request we're responding to
+        if (requestCode == TweetDetailActivity.REQUEST_CODE) {
+            // Make sure the request was successful
+            if (resultCode == Activity.RESULT_OK) {
+                Tweet tweet = Parcels.unwrap(data.getExtras().getParcelable(TweetDetailActivity.TWEET));
+                if (tweet != null) updateTweetInAdapter(tweet);
+
+                boolean refreshTweets = data.getExtras().getBoolean(TweetDetailActivity.REFRESH_TWEETS);
+                if (refreshTweets) {
+                    loadTweets(null, null);
+                }
+            }
+        }
+    }
+
 
     protected abstract void loadTweets(Long sinceID, Long maxID);
 
@@ -183,7 +244,7 @@ public abstract class TweetsListFragment extends Fragment {
 
     }
 
-    private void updateTweetInAdapter(Tweet tweet) {
+    public void updateTweetInAdapter(Tweet tweet) {
         if (mTweets != null) {
             if (mTweets.indexOf(tweet) != -1) {
                 int index = mTweets.indexOf(tweet);
@@ -242,7 +303,6 @@ public abstract class TweetsListFragment extends Fragment {
         mLayoutManager.scrollToPosition(0);
 
     }
-
 
 
     public int getLayout() {

@@ -127,7 +127,9 @@ public class TwitterClient extends OAuthBaseClient {
         client.get(apiUrl, params, new TextHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                Gson gson = gson = new GsonBuilder().create();
+                Gson gson = new GsonBuilder()
+                        .registerTypeAdapter(Date.class, new DeserializerDate())
+                        .create();
                 User user = gson.fromJson(responseString, User.class);
                 callback.onSuccess(user);
             }
@@ -138,6 +140,29 @@ public class TwitterClient extends OAuthBaseClient {
             }
         });
 
+    }
+
+    public void getUserProfile(Long userId, final UserCredentialsCallback callback) {
+        String apiUrl = getApiUrl("users/show.json");
+
+        RequestParams params = new RequestParams();
+        params.put("user_id", userId);
+
+        client.get(apiUrl, params, new TextHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                Gson gson = new GsonBuilder()
+                        .registerTypeAdapter(Date.class, new DeserializerDate())
+                        .create();
+                User user = gson.fromJson(responseString, User.class);
+                callback.onSuccess(user);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                callback.onError(new Error(throwable != null ? throwable.getMessage() : null));
+            }
+        });
     }
 
     public void getUserTimeline(TimelineRequest request,

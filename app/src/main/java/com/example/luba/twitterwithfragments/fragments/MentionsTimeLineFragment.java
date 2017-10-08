@@ -1,5 +1,6 @@
 package com.example.luba.twitterwithfragments.fragments;
 
+import android.os.Bundle;
 import android.widget.Toast;
 
 import com.example.luba.twitterwithfragments.models.Tweet;
@@ -13,6 +14,11 @@ import java.util.ArrayList;
  */
 
 public class MentionsTimeLineFragment extends TweetsListFragment {
+    @Override
+    protected void setupArguments(Bundle arguments) {
+
+    }
+
     @Override
     protected void loadTweets(Long sinceID, Long maxID) {
         Toast.makeText(getContext(), "Loading mentions", Toast.LENGTH_SHORT).show();
