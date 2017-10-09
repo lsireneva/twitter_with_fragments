@@ -36,8 +36,8 @@ public class ProfileActivity extends BaseActivity {
 
     @Override
     protected void setupUI() {
-
-        //mUser = UserInfo.getInstance().getUserInfo();
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        getSupportActionBar().setDisplayShowHomeEnabled(false);
         tvUserName = findViewById(R.id.tv_user_name);
         tvScreenName = findViewById(R.id.tv_screen_name);
         ivBackgroundPicture = findViewById(R.id.iv_background);
@@ -54,28 +54,6 @@ public class ProfileActivity extends BaseActivity {
         //set up the TabLayout to use the view pager
         tabLayout.setupWithViewPager(vpPager);
 
-
-        /*tvUserName.setText(mUser.getName());
-        tvScreenName.setText(mUser.getScreennameToShow());
-        tvDesciption.setText(mUser.getDescription());
-
-        if (mUser.hasProfileBackgroundImage()) {
-            Glide.with(this).load(mUser.getProfileBannerUrl()).centerCrop().into(ivBackgroundPicture);
-        } else {
-            ivBackgroundPicture.setBackgroundColor(getResources().getColor(R.color.blue));
-        }
-
-
-        Glide.with(this)
-                .load(mUser.getProfileImageUrl())
-                .placeholder(R.drawable.ic_twitter)
-                .bitmapTransform(new RoundedCornersTransformation(this, 3, 3))
-                .into(ivProfilePicture);
-
-        tvFollowing.setText(String.valueOf(mUser.getFriendsCount()));
-        tvFollowers.setText(String.valueOf(mUser.getFollowersCount()));*/
-
-
     }
 
 
@@ -83,9 +61,6 @@ public class ProfileActivity extends BaseActivity {
     protected void loadData() {
 
         if (CheckNetwork.isOnline()) {
-        setTitle(mUser.getName());
-        //getSupportActionBar().setTitle(mUser.getName());
-        //getSupportActionBar().setSubtitle(mUser.getName());
 
         if (mUser.getCreatedAt() != null) {
             showUserInfo();
@@ -118,6 +93,9 @@ public class ProfileActivity extends BaseActivity {
         } else {
             updateFollowUnfollow();
         }*/
+
+        tvUserName.setText(mUser.getName());
+        tvScreenName.setText(mUser.getScreennameToShow());
 
         if (mUser.hasProfileBackgroundImage()) {
             Glide.with(this)

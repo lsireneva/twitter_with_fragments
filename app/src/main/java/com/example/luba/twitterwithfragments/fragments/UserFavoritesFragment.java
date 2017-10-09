@@ -1,7 +1,6 @@
 package com.example.luba.twitterwithfragments.fragments;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.example.luba.twitterwithfragments.models.Tweet;
@@ -19,20 +18,21 @@ import java.util.ArrayList;
 
 public class UserFavoritesFragment extends TweetsListFragment {
 
-    User mUser;
-
-    @Override
-    protected void setupArguments(Bundle arguments) {
-        mUser = Parcels.unwrap(arguments.getParcelable(TweetsListFragment.USER));
-
-    }
-
     public static UserFavoritesFragment newInstance(User user) {
         UserFavoritesFragment fragment = new UserFavoritesFragment();
         Bundle args = new Bundle();
         args.putParcelable(TweetsListFragment.USER, Parcels.wrap(user));
         fragment.setArguments(args);
         return fragment;
+    }
+
+
+    User mUser;
+
+    @Override
+    protected void setupArguments(Bundle arguments) {
+        mUser = Parcels.unwrap(arguments.getParcelable(TweetsListFragment.USER));
+
     }
 
     @Override
@@ -48,7 +48,6 @@ public class UserFavoritesFragment extends TweetsListFragment {
             @Override
             public void onSuccess(ArrayList<Tweet> tweets) {
                 processTweets(tweets);
-                Log.d ("DEBUG", "processTweets(tweets);"+tweets);
             }
 
             @Override

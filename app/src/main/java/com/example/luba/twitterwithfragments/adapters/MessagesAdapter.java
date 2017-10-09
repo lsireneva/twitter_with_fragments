@@ -14,7 +14,7 @@ import com.example.luba.twitterwithfragments.models.User;
 
 import java.util.ArrayList;
 
-import jp.wasabeef.glide.transformations.CropCircleTransformation;
+import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
 /**
  * Created by luba on 10/6/17.
@@ -88,7 +88,8 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.Messag
             Glide.with(ivProfileImage.getContext())
                     .load(message.getSender().getProfileImageUrl())
                     .placeholder(R.drawable.ic_twitter)
-                    .bitmapTransform(new CropCircleTransformation(ivProfileImage.getContext()))
+                    //.bitmapTransform(new CropCircleTransformation(ivProfileImage.getContext()))
+                    .bitmapTransform(new RoundedCornersTransformation(ivProfileImage.getContext(), 3, 3))
                     .into(ivProfileImage);
 
             tvName.setText(message.getSender().getName());

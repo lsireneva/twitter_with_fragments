@@ -22,6 +22,8 @@ import com.example.luba.twitterwithfragments.models.User;
 
 import java.util.ArrayList;
 
+import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
+
 /**
  * Created by luba on 10/3/17.
  */
@@ -42,7 +44,6 @@ public class TweetAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     private OnTweetAdapterListener mListener;
 
-
     //pas in the Tweets array in the constructor
     public TweetAdapter (ArrayList<Tweet> twets, OnTweetAdapterListener listener) {
         this.mTweets = twets;
@@ -53,11 +54,6 @@ public class TweetAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        /*context = parent.getContext();
-        LayoutInflater inflater = LayoutInflater.from(context);
-        View tweetView = inflater.inflate(R.layout.item_tweet, parent,false);
-        TweetViewHolder viewHolder = new TweetViewHolder(tweetView);
-        return viewHolder;*/
 
         RecyclerView.ViewHolder viewHolder;
 
@@ -179,7 +175,11 @@ public class TweetAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             tvCreatedAt.setText(tweet.getRelativeTimeAgo());
             //Log.d("DEBUG", "createdAt"+tweet.getRelativeTimeAgo());
 
-            Glide.with(ivProfileImage.getContext()).load(tweet.getUser().getProfileImageUrl()).into(ivProfileImage);
+            Glide.with(ivProfileImage.getContext())
+                    .load(tweet.getUser().getProfileImageUrl())
+                    .placeholder(R.drawable.ic_twitter)
+                    .bitmapTransform(new RoundedCornersTransformation(ivProfileImage.getContext(), 3, 3))
+                    .into(ivProfileImage);
 
 
 
@@ -212,7 +212,6 @@ public class TweetAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             ivPhoto.setImageDrawable(null);
 
             Media photo = tweet.getPhoto();
-            //ivPhoto.setHeightRatio(((double) photo.getSize().getHeight()) / photo.getSize().getWidth());
 
             Glide.with(ivPhoto.getContext())
                     .load(photo.getMediaUrl())
