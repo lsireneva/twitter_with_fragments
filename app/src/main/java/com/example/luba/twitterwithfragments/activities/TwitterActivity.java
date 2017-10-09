@@ -139,7 +139,6 @@ public class TwitterActivity extends BaseActivity implements NewTweetDialogFragm
     }
 
     public void onProfileView(MenuItem item) {
-        //launch the profile view
         User user = UserInfo.getInstance().getUserInfo();
         Intent intent = new Intent (this, ProfileActivity.class);
         intent.putExtra(ProfileActivity.USER, Parcels.wrap(user));
@@ -147,7 +146,6 @@ public class TwitterActivity extends BaseActivity implements NewTweetDialogFragm
     }
 
     public void onMessagesView(MenuItem item) {
-        //launch the profile view
         Intent intent = new Intent (this, MessagesActivity.class);
         startActivity(intent);
     }

@@ -1,5 +1,6 @@
 package com.example.luba.twitterwithfragments.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -27,6 +28,11 @@ public class ProfileActivity extends BaseActivity {
     User mUser;
     TextView tvUserName, tvScreenName, tvFollowing, tvFollowers, tvDesciption;
     ImageView ivBackgroundPicture, ivProfilePicture;
+
+    public enum Follow {
+        FOLLOWING,
+        FOLLOWERS
+    }
 
     @Override
     protected void setupBundle(Bundle extras) {
@@ -118,7 +124,26 @@ public class ProfileActivity extends BaseActivity {
         }
 
         tvFollowing.setText(String.valueOf(mUser.getFriendsCount()));
+        tvFollowing.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(ProfileActivity.this, UserFollowActivity.class);
+                intent.putExtra(UserFollowActivity.FOLLOW, UserFollowActivity.Follow.FOLLOWING);
+                intent.putExtra(UserFollowActivity.USER, Parcels.wrap(mUser));
+                startActivity(intent);
+            }
+        });
         tvFollowers.setText(String.valueOf(mUser.getFollowersCount()));
+        tvFollowers.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(ProfileActivity.this, UserFollowActivity.class);
+                intent.putExtra(UserFollowActivity.FOLLOW, UserFollowActivity.Follow.FOLLOWERS);
+                intent.putExtra(UserFollowActivity.USER, Parcels.wrap(mUser));
+                startActivity(intent);
+
+            }
+        });
     }
 
 

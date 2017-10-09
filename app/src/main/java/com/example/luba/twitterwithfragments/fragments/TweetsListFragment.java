@@ -109,13 +109,13 @@ public abstract class TweetsListFragment extends Fragment {
 
             @Override
             public void replySelectedTweet(Tweet tweet) {
-                Log.d("DEBUG", "replyselectedtweet"+tweet);
+                /*Log.d("DEBUG", "replyselectedtweet"+tweet);
 
-                /*if (CheckNetwork.isOnline()) {
+                if (CheckNetwork.isOnline()) {
                     FragmentManager fm = getSupportFragmentManager();
                     NewTweetDialogFragment fragment = NewTweetDialogFragment.newInstance(tweet);
                     Bundle bundle = new Bundle();
-                    bundle.putParcelable("user", Parcels.wrap(mUserInfo));
+                    //bundle.putParcelable("user", Parcels.wrap(mUserInfo));
                     bundle.putParcelable("tweet", Parcels.wrap(tweet));
                     fragment.setArguments(bundle);
                     fragment.show(fm, "compose_tweet");
@@ -159,18 +159,16 @@ public abstract class TweetsListFragment extends Fragment {
             return;
         }
 
-        //if (getActivity() instanceof ProfileActivity) {
-          //  if (((ProfileActivity) getActivity()).get.equals(user)) {
-            //    return;
-            //}
-        //}
         Intent intent = new Intent(getActivity(), ProfileActivity.class);
         intent.putExtra(ProfileActivity.USER, Parcels.wrap(user));
         startActivity(intent);
     }
 
     private void openTweetDetails(Tweet tweet) {
-
+        if (!CheckNetwork.isOnline()) {
+            Toast.makeText(getActivity(), "No internet conntection", Toast.LENGTH_SHORT).show();
+            return;
+        }
         Intent intent = new Intent(getActivity(), TweetDetailActivity.class);
         intent.putExtra(TweetDetailActivity.TWEET, Parcels.wrap(tweet));
         startActivityForResult(intent, TweetDetailActivity.REQUEST_CODE);
@@ -181,6 +179,7 @@ public abstract class TweetsListFragment extends Fragment {
         Log.d ("DEBUG", "onActivityResult()");
         // Check which request we're responding to
         if (requestCode == TweetDetailActivity.REQUEST_CODE) {
+            Log.d ("DEBUG", "requestCode"+requestCode);
             // Make sure the request was successful
             if (resultCode == Activity.RESULT_OK) {
                 Tweet tweet = Parcels.unwrap(data.getExtras().getParcelable(TweetDetailActivity.TWEET));

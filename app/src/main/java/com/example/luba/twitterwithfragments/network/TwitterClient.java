@@ -13,6 +13,8 @@ import com.example.luba.twitterwithfragments.network.callbacks.NewPostMessageCal
 import com.example.luba.twitterwithfragments.network.callbacks.NewPostTweetCallback;
 import com.example.luba.twitterwithfragments.network.callbacks.TimelineCallback;
 import com.example.luba.twitterwithfragments.network.callbacks.UserCredentialsCallback;
+import com.example.luba.twitterwithfragments.network.callbacks.UserFollowCallback;
+import com.example.luba.twitterwithfragments.network.callbacks.UserFollowResponse;
 import com.github.scribejava.apis.TwitterApi;
 import com.github.scribejava.core.builder.api.BaseApi;
 import com.google.gson.Gson;
@@ -300,6 +302,64 @@ public class TwitterClient extends OAuthBaseClient {
                         new TypeToken<ArrayList<Tweet>>() {
                         }.getType());
                 callback.onSuccess(tweets);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                callback.onError(new Error(throwable != null ? throwable.getMessage() : null));
+            }
+        });
+    }
+
+    public void getFollowing(UserFollowRequest request, final UserFollowCallback callback) {
+        String apiUrl = getApiUrl("friends/list.json");
+
+        RequestParams params = new RequestParams();
+        if (request != null) {
+            if (request.getUserId() != null) {
+                params.put("user_id", request.getUserId());
+            }
+            if (request.getCursor() != null) {
+                params.put("cursor", request.getCursor());
+            }
+        }
+
+        client.get(apiUrl, params, new TextHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                Gson gson = new GsonBuilder()
+                        .registerTypeAdapter(Date.class, new DeserializerDate())
+                        .create();
+                callback.onSuccess(gson.fromJson(responseString, UserFollowResponse.class));
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                callback.onError(new Error(throwable != null ? throwable.getMessage() : null));
+            }
+        });
+    }
+
+    public void getFollowers(UserFollowRequest request, final UserFollowCallback callback) {
+        String apiUrl = getApiUrl("followers/list.json");
+
+        RequestParams params = new RequestParams();
+        if (request != null) {
+            if (request.getUserId() != null) {
+                params.put("user_id", request.getUserId());
+            }
+            if (request.getCursor() != null) {
+                params.put("cursor", request.getCursor());
+            }
+        }
+
+        client.get(apiUrl, params, new TextHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                Gson gson = new GsonBuilder()
+                        .registerTypeAdapter(Date.class, new DeserializerDate())
+                        .create();
+                callback.onSuccess(gson.fromJson(responseString, UserFollowResponse.class));
             }
 
             @Override

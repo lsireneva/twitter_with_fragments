@@ -74,7 +74,7 @@ public class MessagesActivity extends BaseActivity implements MessagesAdapter.On
         mAdapter = new MessagesAdapter(mMessages, new MessagesAdapter.OnMessagesAdapterListener() {
             @Override
             public void selectedUser(User user) {
-                goToProfile(user);
+                openProfile(user);
             }
         });
         rvMessages.setAdapter(mAdapter);
@@ -169,11 +169,11 @@ public class MessagesActivity extends BaseActivity implements MessagesAdapter.On
 
     @Override
     public void selectedUser(User user) {
-        goToProfile(user);
+        openProfile(user);
 
     }
 
-    private void goToProfile(User user) {
+    private void openProfile(User user) {
         Intent intent = new Intent(this, ProfileActivity.class);
         intent.putExtra(ProfileActivity.USER, Parcels.wrap(user));
         startActivityForResult(intent, TweetDetailActivity.REQUEST_CODE);

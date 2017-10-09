@@ -42,7 +42,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.Messag
 
     @Override
     public void onBindViewHolder(MessageViewHolder holder, int position) {
-        holder.configureViewWithMessage(mMessages.get(position));
+        holder.setupViewWithMessage(mMessages.get(position));
     }
 
     @Override
@@ -61,7 +61,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.Messag
 
         ImageView ivProfileImage;
         TextView tvName;
-        TextView tvUser;
+        TextView tvScreenname;
         TextView tvText;
         TextView tvDate;
 
@@ -69,7 +69,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.Messag
             super(itemView);
             ivProfileImage = (ImageView) itemView.findViewById(R.id.iv_profile_image);
             tvName = (TextView) itemView.findViewById(R.id.tv_name);
-            tvUser = (TextView) itemView.findViewById(R.id.tv_user);
+            tvScreenname = (TextView) itemView.findViewById(R.id.tv_screenname);
             tvDate = (TextView) itemView.findViewById(R.id.tv_date);
             tvText = (TextView) itemView.findViewById(R.id.tv_text);
 
@@ -82,18 +82,17 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.Messag
             });
         }
 
-        public void configureViewWithMessage(Message message) {
+        public void setupViewWithMessage(Message message) {
             this.message = message;
 
             Glide.with(ivProfileImage.getContext())
                     .load(message.getSender().getProfileImageUrl())
                     .placeholder(R.drawable.ic_twitter)
-                    //.bitmapTransform(new CropCircleTransformation(ivProfileImage.getContext()))
                     .bitmapTransform(new RoundedCornersTransformation(ivProfileImage.getContext(), 3, 3))
                     .into(ivProfileImage);
 
             tvName.setText(message.getSender().getName());
-            tvUser.setText(message.getSender().getScreennameToShow());
+            tvScreenname.setText(message.getSender().getScreennameToShow());
             tvText.setText(message.getText());
             tvDate.setText(message.getFormattedCreatedAtDate());
         }

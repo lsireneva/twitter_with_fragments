@@ -1,5 +1,6 @@
 package com.example.luba.twitterwithfragments.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
@@ -50,4 +51,11 @@ public class HomeTimeLineFragment extends TweetsListFragment {
     public void insertTweetAtTop(Tweet tweet) {
         super.insertTweetAtTop(tweet);
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d ("DEBUG", "onActivityResult in HomeTimelineFragment"+requestCode);
+        super.onActivityResult(requestCode, resultCode, data);}
+
+
 }
