@@ -20,7 +20,7 @@ import org.parceler.Parcels;
 
 public class TweetDetailActivity extends BaseActivity implements NewTweetDialogFragment.OnNewTweetDialogFragmentListener{
 
-    public static final int REQUEST_CODE =6565;
+    public static final int REQUEST_CODE =123;
     public static final String TWEET ="tweet" ;
     public static final java.lang.String REFRESH_TWEETS ="refresh tweets" ;
     protected Toolbar toolbar;

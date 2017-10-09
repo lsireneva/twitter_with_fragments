@@ -17,6 +17,7 @@ import com.github.scribejava.apis.TwitterApi;
 import com.github.scribejava.core.builder.api.BaseApi;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.TextHttpResponseHandler;
@@ -270,6 +271,44 @@ public class TwitterClient extends OAuthBaseClient {
             }
         });
     }
+
+    public void searchTweets(TimelineRequest request,
+                             final TimelineCallback callback) {
+        String apiUrl = getApiUrl("search/tweets.json");
+
+        RequestParams params = new RequestParams();
+        if (request != null) {
+            if (request.getSinceId() != null) {
+                params.put("since_id", request.getSinceId());
+            }
+            if (request.getMaxId() != null) {
+                params.put("max_id", request.getMaxId());
+            }
+            if (request.getQuery() != null) {
+                params.put("q", request.getQuery());
+            }
+        }
+
+        client.get(apiUrl, params, new TextHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                Gson gson = new GsonBuilder()
+                        .registerTypeAdapter(Date.class, new DeserializerDate())
+                        .create();
+                JsonObject jsonObject = new Gson().fromJson(responseString, JsonObject.class);
+                ArrayList<Tweet> tweets = gson.fromJson(jsonObject.get("statuses").getAsJsonArray(),
+                        new TypeToken<ArrayList<Tweet>>() {
+                        }.getType());
+                callback.onSuccess(tweets);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                callback.onError(new Error(throwable != null ? throwable.getMessage() : null));
+            }
+        });
+    }
+
 
     public void postMessages(NewMessageRequest request, final NewPostMessageCallback callback) {
         String apiUrl = getApiUrl("direct_messages/new.json");

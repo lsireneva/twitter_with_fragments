@@ -1,31 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:yourapp="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/miMessages"
+        android:id="@+id/action_message"
+        android:orderInCategory="100"
         android:title="messages"
         android:icon="@drawable/ic_message"
         android:visible="true"
         android:onClick="onMessagesView"
-        yourapp:showAsAction="always"/>
+        app:showAsAction="always"/>
 
     <item
-        android:id="@+id/miProfile"
+        android:id="@+id/action_profile"
         android:title="person"
+        android:orderInCategory="200"
         android:icon="@drawable/ic_person"
         android:visible="true"
         android:onClick="onProfileView"
-        yourapp:showAsAction="always"/>
+        app:showAsAction="always"/>
 
     <item
-        android:id="@+id/miSearch"
-        android:title="search"
+        android:id="@+id/action_search"
         android:icon="@drawable/ic_search"
-        android:visible="true"
-        android:onClick="onSearch"
-        yourapp:showAsAction="always"/>
-
-
-
+        app:showAsAction="collapseActionView|always"
+        android:title="Search"
+        app:actionViewClass="android.support.v7.widget.SearchView"/>
 </menu>

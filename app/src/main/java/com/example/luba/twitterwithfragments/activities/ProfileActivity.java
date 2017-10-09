@@ -7,11 +7,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.luba.twitterwithfragments.R;
 import com.example.luba.twitterwithfragments.adapters.ProfilePagerAdapter;
 import com.example.luba.twitterwithfragments.models.User;
+import com.example.luba.twitterwithfragments.network.CheckNetwork;
 import com.example.luba.twitterwithfragments.network.callbacks.UserCredentialsCallback;
 
 import org.parceler.Parcels;
@@ -79,6 +81,8 @@ public class ProfileActivity extends BaseActivity {
 
     @Override
     protected void loadData() {
+
+        if (CheckNetwork.isOnline()) {
         setTitle(mUser.getName());
         //getSupportActionBar().setTitle(mUser.getName());
         //getSupportActionBar().setSubtitle(mUser.getName());
@@ -87,6 +91,7 @@ public class ProfileActivity extends BaseActivity {
             showUserInfo();
         } else {
             Log.d("DEBUG", "profile is incomplete, request it");
+
             mTwitterClient.getUserProfile(mUser.getUserId(), new UserCredentialsCallback() {
                 @Override
                 public void onSuccess(User user) {
@@ -99,6 +104,9 @@ public class ProfileActivity extends BaseActivity {
 
                 }
             });
+        }
+        } else {
+            Toast.makeText(this, "No internet connection", Toast.LENGTH_SHORT).show();
         }
 
     }

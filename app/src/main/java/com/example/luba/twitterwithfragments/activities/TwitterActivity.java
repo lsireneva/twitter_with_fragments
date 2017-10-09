@@ -1,5 +1,7 @@
 package com.example.luba.twitterwithfragments.activities;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
@@ -7,9 +9,11 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -32,6 +36,8 @@ public class TwitterActivity extends BaseActivity implements NewTweetDialogFragm
     FloatingActionButton fabCompose;
     TweetsPagerAdapter adapterViewPager;
     ViewPager vpPager;
+    String mTextFilter;
+    boolean mFirstLoad;
 
 
 
@@ -93,10 +99,43 @@ public class TwitterActivity extends BaseActivity implements NewTweetDialogFragm
         return R.layout.activity_twitter;
     }
 
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_menu, menu);
-        return true;
+        // Inflate the options menu from XML
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
+        // Get the SearchView and set the searchable configuration
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        final SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        // Assumes current activity is the searchable activity
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        searchView.setIconifiedByDefault(false); // Do not iconify the widget; expand it by default
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                // perform query here
+                searchView.clearFocus();
+                Log.i("DEBUG","query"+query);
+                Intent intent = new Intent(getApplicationContext(), SearchActivity.class);
+                intent.putExtra(SearchActivity.QUERY, query);
+                startActivity(intent);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        return super.onOptionsItemSelected(item);
     }
 
     public void onProfileView(MenuItem item) {
@@ -120,6 +159,4 @@ public class TwitterActivity extends BaseActivity implements NewTweetDialogFragm
         fragmentHomeTimeLine.insertTweetAtTop(tweet);
     }
 
-    public void onSearch(MenuItem item) {
-    }
 }

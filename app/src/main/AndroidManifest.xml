@@ -50,6 +50,9 @@
         <activity
             android:name=".activities.MessagesActivity"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activities.SearchActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
 
     </application>
 
