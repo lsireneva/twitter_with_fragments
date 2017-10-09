@@ -38,6 +38,7 @@ public class TwitterActivity extends BaseActivity implements NewTweetDialogFragm
     ViewPager vpPager;
     String mTextFilter;
     boolean mFirstLoad;
+    HomeTimeLineFragment fragmentHomeTimeLine;
 
 
 
@@ -153,8 +154,38 @@ public class TwitterActivity extends BaseActivity implements NewTweetDialogFragm
     @Override
     public void onTimeLineChanged(Tweet tweet) {
         Log.d ("DEBUG", "onTimeLineChanged"+ tweet);
-        HomeTimeLineFragment fragmentHomeTimeLine = (HomeTimeLineFragment) adapterViewPager.getRegisteredFragment(0);
+        fragmentHomeTimeLine = (HomeTimeLineFragment) adapterViewPager.getRegisteredFragment(0);
         fragmentHomeTimeLine.insertTweetAtTop(tweet);
+        fragmentHomeTimeLine.loadTweets(null,null);
+
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        //fragmentHomeTimeLine = (HomeTimeLineFragment) adapterViewPager.getRegisteredFragment(0);
+        //fragmentHomeTimeLine.onActivityResult(requestCode,resultCode,data);
+
+        //fragmentHomeTimeLine.loadTweets(null,null);
+
+        /*Log.d ("DEBUG", "onActivityResult() in TwitterActivity");
+        // Check which request we're responding to
+        if (requestCode == TweetDetailActivity.REQUEST_CODE) {
+            Log.d ("DEBUG", "requestCode"+requestCode);
+            // Make sure the request was successful
+            if (resultCode == Activity.RESULT_OK) {
+                Tweet tweet = Parcels.unwrap(data.getExtras().getParcelable(TweetDetailActivity.TWEET));
+                if (tweet != null) {
+                    Log.d ("DEBUG", "tweet != null"+tweet);
+                    fragmentHomeTimeLine.updateTweetInAdapter(tweet);
+                }
+
+                boolean refreshTweets = data.getExtras().getBoolean(TweetDetailActivity.REFRESH_TWEETS);
+                if (refreshTweets) {
+                    fragmentHomeTimeLine.loadTweets(null, null);
+
+                }
+            }
+        }*/
     }
 
 }

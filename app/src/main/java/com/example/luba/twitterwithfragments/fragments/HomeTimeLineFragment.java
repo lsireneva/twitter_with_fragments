@@ -1,6 +1,5 @@
 package com.example.luba.twitterwithfragments.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
@@ -22,7 +21,7 @@ public class HomeTimeLineFragment extends TweetsListFragment {
     }
 
     @Override
-    protected void loadTweets(Long sinceID, Long maxID) {
+    public void loadTweets(Long sinceID, Long maxID) {
 
         Toast.makeText(getContext(), "Loading tweets", Toast.LENGTH_SHORT).show();
         TimelineRequest request = new TimelineRequest();
@@ -33,7 +32,7 @@ public class HomeTimeLineFragment extends TweetsListFragment {
             @Override
             public void onSuccess(ArrayList<Tweet> tweets) {
                 // Save in database
-                //saveTweetsToDB(tweets);
+                saveTweetsToDB(tweets);
                 processTweets(tweets);
                 Log.d ("DEBUG", "processTweets(tweets);"+tweets);
             }
@@ -53,9 +52,9 @@ public class HomeTimeLineFragment extends TweetsListFragment {
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.d ("DEBUG", "onActivityResult in HomeTimelineFragment"+requestCode);
-        super.onActivityResult(requestCode, resultCode, data);}
+    public void updateTweetInAdapter(Tweet tweet) {
+        super.updateTweetInAdapter(tweet);
+    }
 
 
 }

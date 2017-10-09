@@ -39,6 +39,8 @@ public class TweetAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         void selectedTweet(Tweet tweet);
         void replySelectedTweet(Tweet tweet);
         void selectedUser(User user);
+        void selectedRetweet(Tweet tweet);
+        void selectedAsFavorite(Tweet tweet);
     }
 
 
@@ -123,8 +125,8 @@ public class TweetAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         public TextView tvUsername;
         public TextView tvBody;
         public TextView tvCreatedAt;
-        public  TextView tvName;
-        public ImageView btnReply;
+        public  TextView tvName, tvRetweetCount, tvFavoriteCount;
+        public ImageView btnReply,  btnRetweet, btnFavorite;
 
         public TweetViewHolder(View itemView) {
             super(itemView);
@@ -136,6 +138,10 @@ public class TweetAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             tvCreatedAt = (TextView) itemView.findViewById(R.id.tvTimestamp);
             tvName = (TextView) itemView.findViewById(R.id.tvName);
             btnReply = (ImageView) itemView.findViewById(R.id.btnReply);
+            btnRetweet = (ImageView) itemView.findViewById(R.id.btnRetweet);
+            btnFavorite = (ImageView) itemView.findViewById(R.id.btnFavorite);
+            tvRetweetCount = (TextView) itemView.findViewById(R.id.tvRetweetCount);
+            tvFavoriteCount = (TextView) itemView.findViewById(R.id.tvFavoriteCount);
 
 
             itemView.setOnClickListener(new View.OnClickListener() {
@@ -161,6 +167,22 @@ public class TweetAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 }
             });
 
+            btnRetweet.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //pbRetweet.setVisibility(View.VISIBLE);
+                    if (mListener != null) mListener.selectedRetweet(tweet);
+                }
+            });
+
+            btnFavorite.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //pbFavorite.setVisibility(View.VISIBLE);
+                    if (mListener != null) mListener.selectedAsFavorite(tweet);
+                }
+            });
+
 
         }
 
@@ -173,7 +195,19 @@ public class TweetAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             tvBody.setText(tweet.getText());
 
             tvCreatedAt.setText(tweet.getRelativeTimeAgo());
-            //Log.d("DEBUG", "createdAt"+tweet.getRelativeTimeAgo());
+            tvRetweetCount.setText(String.valueOf(tweet.getRetweetCount()));
+            tvFavoriteCount.setText(String.valueOf(tweet.getFavoriteCount()));
+
+
+
+            if (tweet.isRetweeted()) {
+                btnRetweet.setBackgroundResource(R.drawable.ic_retweet_clicked);
+            }
+
+            if (tweet.isFavorite())  {
+                btnFavorite.setBackgroundResource(R.drawable.ic_favorite_clicked);}
+
+
 
             Glide.with(ivProfileImage.getContext())
                     .load(tweet.getUser().getProfileImageUrl())

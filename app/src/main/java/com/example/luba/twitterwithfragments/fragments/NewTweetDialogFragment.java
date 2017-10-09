@@ -68,11 +68,10 @@ public class NewTweetDialogFragment extends DialogFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mUser = UserInfo.getInstance().getUserInfo();
-        /*if (getArguments() != null) {
-            mUser = (User) Parcels.unwrap(getArguments().getParcelable("user"));
+        if (getArguments() != null) {
             mTweet = (Tweet) Parcels.unwrap(getArguments().getParcelable("tweet"));
             Log.d("DEBUG", "mTweet != null"+mTweet);
-        }*/
+        }
 
     }
 

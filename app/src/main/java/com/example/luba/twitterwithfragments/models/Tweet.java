@@ -48,6 +48,24 @@ public class Tweet extends BaseModel {
     @SerializedName("entities")
     Entities entities;
 
+    @SerializedName("favorited")
+    @Column(name = "favorite")
+    boolean favorite;
+
+    @SerializedName("retweeted")
+    @Column(name = "retweeted")
+    boolean retweeted;
+
+    @SerializedName("retweet_count")
+    @Column(name = "retweet_count")
+    int retweetCount;
+
+    @SerializedName("retweeted_status")
+    Tweet retweetedStatus;
+
+    @SerializedName("favorite_count")
+    @Column(name = "favorite_count")
+    int favoriteCount;
 
 
 
@@ -130,7 +148,45 @@ public class Tweet extends BaseModel {
         return entities.getPhoto();
     }
 
+    public boolean isRetweeted() {
+        return retweeted;
+    }
 
+    public void setRetweeted(boolean retweeted) {
+        this.retweeted = retweeted;
+    }
+
+    public int getRetweetCount() {
+        return retweetCount;
+    }
+
+    public void setRetweetCount(int retweetCount) {
+        this.retweetCount = retweetCount;
+    }
+
+    public Tweet getRetweetedStatus() {
+        return retweetedStatus;
+    }
+
+    public void setRetweetedStatus(Tweet retweetedStatus) {
+        this.retweetedStatus = retweetedStatus;
+    }
+
+    public int getFavoriteCount() {
+        return favoriteCount;
+    }
+
+    public void setFavoriteCount(int favoriteCount) {
+        this.favoriteCount = favoriteCount;
+    }
+
+    public boolean isFavorite() {
+        return favorite;
+    }
+
+    public void setFavorite(boolean favorite) {
+        this.favorite = favorite;
+    }
 
 
     // Record Finders

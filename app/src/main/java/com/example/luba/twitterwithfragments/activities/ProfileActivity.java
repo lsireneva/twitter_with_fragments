@@ -13,6 +13,8 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.luba.twitterwithfragments.R;
 import com.example.luba.twitterwithfragments.adapters.ProfilePagerAdapter;
+import com.example.luba.twitterwithfragments.fragments.NewTweetDialogFragment;
+import com.example.luba.twitterwithfragments.models.Tweet;
 import com.example.luba.twitterwithfragments.models.User;
 import com.example.luba.twitterwithfragments.network.CheckNetwork;
 import com.example.luba.twitterwithfragments.network.callbacks.UserCredentialsCallback;
@@ -21,13 +23,18 @@ import org.parceler.Parcels;
 
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
-public class ProfileActivity extends BaseActivity {
+public class ProfileActivity extends BaseActivity implements NewTweetDialogFragment.OnNewTweetDialogFragmentListener{
 
     public static final String USER = "USER";
 
     User mUser;
     TextView tvUserName, tvScreenName, tvFollowing, tvFollowers, tvDesciption;
     ImageView ivBackgroundPicture, ivProfilePicture;
+
+    @Override
+    public void onTimeLineChanged(Tweet tweet) {
+
+    }
 
     public enum Follow {
         FOLLOWING,
@@ -145,7 +152,6 @@ public class ProfileActivity extends BaseActivity {
             }
         });
     }
-
 
     @Override
     protected int getLayoutResourceID() {

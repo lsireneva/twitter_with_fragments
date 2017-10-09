@@ -79,12 +79,36 @@
                 android:linksClickable="true"
                 tools:text="Status" />
 
+            <RelativeLayout
+                android:id="@+id/photo_frame"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tvStatus"
+                android:layout_marginTop="@dimen/activity_vertical_margin_half">
 
+                <ImageView
+                    android:id="@+id/iv_photo"
+                    android:layout_width="match_parent"
+                    android:layout_height="300dp"
+                    android:layout_centerHorizontal="true"
+                    android:autoLink="all"
+                    android:linksClickable="true"
+                    tools:ignore="ContentDescription"
+                    tools:text="Status Status" />
+
+                <ProgressBar
+                    android:id="@+id/progressbar"
+                    style="@android:style/Widget.ProgressBar.Small"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true" />
+
+            </RelativeLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/tvStatus"
+                android:layout_below="@+id/photo_frame"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="@dimen/activity_vertical_margin"
                 android:baselineAligned="false"

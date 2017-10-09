@@ -27,15 +27,26 @@
         android:layout_height="wrap_content"
         android:layout_weight="1">
 
-        <TextView
-            android:id="@+id/tvRetweet"
+        <ImageView
+            android:id="@+id/btnRetweet"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:drawableLeft="@drawable/ic_retweet"
-            android:drawableStart="@drawable/ic_retweet"
-            android:gravity="center_vertical"
+            app:srcCompat="@drawable/ic_retweet"
             tools:ignore="ContentDescription" />
+
+        <TextView
+            android:id="@+id/tvRetweetCount"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:layout_alignBottom="@id/btnRetweet"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="5dp"
+            android:layout_toStartOf="@id/btnRetweet"
+            android:layout_toLeftOf="@+id/btnRetweet"
+            android:gravity="center_vertical"
+            android:text="100" />
+
 
 
     </RelativeLayout>
@@ -45,15 +56,25 @@
         android:layout_height="wrap_content"
         android:layout_weight="1">
 
-        <TextView
-            android:id="@+id/tvFavorite"
+        <ImageView
+            android:id="@+id/btnFavorite"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:drawableLeft="@drawable/ic_favorite"
-            android:drawableStart="@drawable/ic_favorite"
-            android:gravity="center_vertical"
+            app:srcCompat="@drawable/ic_favorite"
             tools:ignore="ContentDescription" />
+
+        <TextView
+            android:id="@+id/tvFavoriteCount"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:layout_alignBottom="@id/btnFavorite"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="5dp"
+            android:layout_toStartOf="@id/btnFavorite"
+            android:layout_toLeftOf="@+id/btnFavorite"
+            android:gravity="center_vertical"
+            android:text="100" />
 
     </RelativeLayout>
 

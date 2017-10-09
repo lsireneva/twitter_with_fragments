@@ -8,9 +8,11 @@ import com.example.luba.twitterwithfragments.R;
 import com.example.luba.twitterwithfragments.models.Message;
 import com.example.luba.twitterwithfragments.models.Tweet;
 import com.example.luba.twitterwithfragments.models.User;
+import com.example.luba.twitterwithfragments.network.callbacks.FavoriteTweetCallback;
 import com.example.luba.twitterwithfragments.network.callbacks.MessagesCallback;
 import com.example.luba.twitterwithfragments.network.callbacks.NewPostMessageCallback;
 import com.example.luba.twitterwithfragments.network.callbacks.NewPostTweetCallback;
+import com.example.luba.twitterwithfragments.network.callbacks.RetweetCallback;
 import com.example.luba.twitterwithfragments.network.callbacks.TimelineCallback;
 import com.example.luba.twitterwithfragments.network.callbacks.UserCredentialsCallback;
 import com.example.luba.twitterwithfragments.network.callbacks.UserFollowCallback;
@@ -360,6 +362,62 @@ public class TwitterClient extends OAuthBaseClient {
                         .registerTypeAdapter(Date.class, new DeserializerDate())
                         .create();
                 callback.onSuccess(gson.fromJson(responseString, UserFollowResponse.class));
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                callback.onError(new Error(throwable != null ? throwable.getMessage() : null));
+            }
+        });
+    }
+
+    public void retweet(final RetweetRequest request, final RetweetCallback callback) {
+        String apiUrl;
+        if (request.isRetweet()) {
+            apiUrl = getApiUrl(String.format("statuses/unretweet/%1$s.json", request.getTweetId().toString()));
+        } else {
+            apiUrl = getApiUrl(String.format("statuses/retweet/%1$s.json", request.getTweetId().toString()));
+        }
+
+        RequestParams params = new RequestParams();
+        params.put("id", request.getTweetId());
+
+        client.post(apiUrl, params, new TextHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                Gson gson = new GsonBuilder()
+                        .registerTypeAdapter(Date.class, new DeserializerDate())
+                        .create();
+                Tweet tweet = gson.fromJson(responseString, Tweet.class);
+                callback.onSuccess(tweet);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                callback.onError(new Error(throwable != null ? throwable.getMessage() : null));
+            }
+        });
+    }
+
+    public void markAsFavorite(FavoriteTweetRequest request, final FavoriteTweetCallback callback) {
+        String apiUrl;
+        if (request.isFavorite()) {
+            apiUrl = getApiUrl("favorites/destroy.json");
+        } else {
+            apiUrl = getApiUrl("favorites/create.json");
+        }
+
+        RequestParams params = new RequestParams();
+        params.put("id", request.getTweetId());
+
+        client.post(apiUrl, params, new TextHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                Gson gson = new GsonBuilder()
+                        .registerTypeAdapter(Date.class, new DeserializerDate())
+                        .create();
+                Tweet tweet = gson.fromJson(responseString, Tweet.class);
+                callback.onSuccess(tweet);
             }
 
             @Override

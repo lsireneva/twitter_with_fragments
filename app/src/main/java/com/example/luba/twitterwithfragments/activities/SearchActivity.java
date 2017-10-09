@@ -5,13 +5,15 @@ import android.support.v4.app.FragmentTransaction;
 import android.widget.FrameLayout;
 
 import com.example.luba.twitterwithfragments.R;
+import com.example.luba.twitterwithfragments.fragments.NewTweetDialogFragment;
 import com.example.luba.twitterwithfragments.fragments.SearchFragment;
+import com.example.luba.twitterwithfragments.models.Tweet;
 
 /**
  * Created by luba on 10/8/17.
  */
 
-public class SearchActivity extends BaseActivity {
+public class SearchActivity extends BaseActivity implements NewTweetDialogFragment.OnNewTweetDialogFragmentListener {
 
     public static final String QUERY = "QUERY";
     String query;
@@ -43,5 +45,10 @@ public class SearchActivity extends BaseActivity {
     @Override
     protected int getLayoutResourceID() {
         return R.layout.activity_search;
+    }
+
+    @Override
+    public void onTimeLineChanged(Tweet tweet) {
+        
     }
 }
