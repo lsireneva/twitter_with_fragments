@@ -119,34 +119,37 @@ public class NewTweetDialogFragment extends DialogFragment {
             Log.d("DEBUG", "mTweet != null"+mTweet);
             mReply.setText(getString(R.string.in_reply_to, mTweet.getUser().getScreennameToShow()));
             mReply.setVisibility(View.VISIBLE);
+            etStatus.setText(mTweet.getUser().getScreennameToShow() + " ");
+            mCounter.setText(String.valueOf(TWEET_LIMIT - etStatus.getText().length()));
+            Log.d ("DEBUG", "TWEET_LIMIT - etStatus.getText().length())"+String.valueOf(TWEET_LIMIT - etStatus.getText().length()));
+            etStatus.requestFocus();
         } else {
             mReply.setVisibility(View.GONE);
+            mCounter.setText(String.valueOf(TWEET_LIMIT));
         }
 
-        mCounter.setText(getResources().getString(R.string.tweet_limit));
         etStatus.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
+                Log.d("DEBUG", "beforeTextChanged");
 
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                Log.d("DEBUG", "onTextChanged");
 
             }
 
             @Override
             public void afterTextChanged(Editable e) {
+                Log.d("DEBUG", "afterTextChanged");
                 mStatus = e != null ? e.toString() : null;
                 updateCounter();
                 enableTweetButton();
 
             }
         });
-
-        //updateCounter();
-        //enableTweetButton();
 
 
         btnClose.setOnClickListener(new View.OnClickListener() {
@@ -199,6 +202,7 @@ public class NewTweetDialogFragment extends DialogFragment {
     }
 
     private void updateCounter() {
+
         int count = mStatus != null ? mStatus.length() : 0;
         mCounter.setText(String.valueOf(TWEET_LIMIT - count));
         if ((TWEET_LIMIT - count) < 0) {

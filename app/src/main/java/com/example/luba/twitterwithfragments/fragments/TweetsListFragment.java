@@ -14,6 +14,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.luba.twitterwithfragments.R;
@@ -135,7 +137,7 @@ public abstract class TweetsListFragment extends Fragment {
             }
 
             @Override
-            public void selectedRetweet(final Tweet tweet) {
+            public void selectedRetweet(final Tweet tweet, TextView tvRetweetCount, ImageView btnRetweet) {
 
                 if (!CheckNetwork.isOnline()) {
                     Toast.makeText(getActivity(), "No internet connection", Toast.LENGTH_SHORT).show();
@@ -185,7 +187,7 @@ public abstract class TweetsListFragment extends Fragment {
             }
 
             @Override
-            public void selectedAsFavorite(final Tweet tweet) {
+            public void selectedAsFavorite(final Tweet tweet, final TextView tvFavoriteCount, final ImageView btnFavorite) {
 
                 if (!CheckNetwork.isOnline()) {
                     Toast.makeText(getActivity(), "No internet connection", Toast.LENGTH_SHORT).show();
@@ -199,6 +201,8 @@ public abstract class TweetsListFragment extends Fragment {
                     public void onSuccess(Tweet tweet) {
                         tweet.setFavorite(tweet.isFavorite());
                         tweet.setFavoriteCount(tweet.getFavoriteCount());
+                        tvFavoriteCount.setText(String.valueOf(tweet.getFavoriteCount()));
+                        btnFavorite.setBackground(getContext().getResources().getDrawable(R.drawable.ic_favorite_clicked));
                         if (tweet.getRetweetedStatus() != null) {
                             tweet.getRetweetedStatus().setFavoriteCount(tweet.getFavoriteCount());
                         }

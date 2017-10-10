@@ -27,7 +27,8 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/activity_horizontal_margin_half">
 
         <Button
             android:id="@+id/btnCancel"
@@ -35,6 +36,8 @@
             android:layout_height="wrap_content"
             android:layout_toLeftOf="@+id/btnSend"
             android:layout_marginLeft="@dimen/activity_horizontal_margin_half"
+            android:background="@color/blue"
+            android:textColor="@color/white"
             android:text="CANCEL" />
 
         <Button
@@ -42,6 +45,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin_half"
+            android:background="@color/blue"
+            android:textColor="@color/white"
             android:text="SEND" />
 
     </RelativeLayout>

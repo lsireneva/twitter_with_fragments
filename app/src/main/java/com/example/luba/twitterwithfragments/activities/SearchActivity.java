@@ -49,6 +49,6 @@ public class SearchActivity extends BaseActivity implements NewTweetDialogFragme
 
     @Override
     public void onTimeLineChanged(Tweet tweet) {
-        
+
     }
 }

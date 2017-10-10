@@ -39,8 +39,8 @@ public class TweetAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         void selectedTweet(Tweet tweet);
         void replySelectedTweet(Tweet tweet);
         void selectedUser(User user);
-        void selectedRetweet(Tweet tweet);
-        void selectedAsFavorite(Tweet tweet);
+        void selectedRetweet(Tweet tweet, TextView tvRetweetCount, ImageView btnRetweet);
+        void selectedAsFavorite(Tweet tweet, TextView tvFavoriteCount, ImageView btnFavorite);
     }
 
 
@@ -171,7 +171,7 @@ public class TweetAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 @Override
                 public void onClick(View view) {
                     //pbRetweet.setVisibility(View.VISIBLE);
-                    if (mListener != null) mListener.selectedRetweet(tweet);
+                    if (mListener != null) mListener.selectedRetweet(tweet, tvRetweetCount, btnRetweet);
                 }
             });
 
@@ -179,7 +179,7 @@ public class TweetAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 @Override
                 public void onClick(View view) {
                     //pbFavorite.setVisibility(View.VISIBLE);
-                    if (mListener != null) mListener.selectedAsFavorite(tweet);
+                    if (mListener != null) mListener.selectedAsFavorite(tweet, tvFavoriteCount, btnFavorite);
                 }
             });
 

@@ -82,8 +82,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:layout_toLeftOf="@+id/btnComposeNewTweet"
-            android:layout_marginRight="@dimen/activity_horizontal_margin"
-            tools:text="@string/tweet_limit" />
+            android:layout_marginRight="@dimen/activity_horizontal_margin"/>
 
 
         <Button
