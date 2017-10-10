@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import com.example.luba.twitterwithfragments.R;
 import com.example.luba.twitterwithfragments.TwitterApplication;
+import com.example.luba.twitterwithfragments.UserInfo;
 import com.example.luba.twitterwithfragments.activities.ProfileActivity;
 import com.example.luba.twitterwithfragments.activities.TweetDetailActivity;
 import com.example.luba.twitterwithfragments.activities.TwitterActivity;
@@ -33,7 +34,10 @@ import com.example.luba.twitterwithfragments.network.TwitterClient;
 import com.example.luba.twitterwithfragments.network.callbacks.FavoriteTweetCallback;
 import com.example.luba.twitterwithfragments.network.callbacks.RetweetCallback;
 import com.example.luba.twitterwithfragments.utils.EndlessRecyclerViewScrollListener;
+import com.example.luba.twitterwithfragments.utils.TweetEvent;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
@@ -138,52 +142,7 @@ public abstract class TweetsListFragment extends Fragment {
 
             @Override
             public void selectedRetweet(final Tweet tweet, TextView tvRetweetCount, ImageView btnRetweet) {
-
-                if (!CheckNetwork.isOnline()) {
-                    Toast.makeText(getActivity(), "No internet connection", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                final RetweetRequest request = new RetweetRequest();
-                if (tweet.isRetweeted()) {
-                    // Undo retweet
-                    request.setRetweet(true);
-                    request.setTweetId(tweet.getRetweetedStatus() != null ? tweet.getRetweetedStatus().getTweetId() : tweet.getTweetId());
-                } else {
-                    // Retweet
-                    request.setRetweet(false);
-                    request.setTweetId(tweet.getTweetId());
-                }
-
-                mTwitterClient.retweet(request, new RetweetCallback() {
-                    @Override
-                    public void onSuccess(Tweet tweet) {
-                        // Weird bug ... this request does not return the favorites information
-                        // Fix
-                        int favoriteCount = tweet.getRetweetedStatus() != null ? tweet.getRetweetedStatus().getFavoriteCount() : tweet.getFavoriteCount();
-
-                        if (request.isRetweet()) {
-                            tweet.setRetweetCount(tweet.getRetweetCount() - 1);
-                            tweet.setRetweetedStatus(null);
-                            tweet.setRetweeted(false);
-                        } else {
-                            tweet.setRetweetCount(tweet.getRetweetCount() + 1);
-                            tweet.setRetweetedStatus(tweet);
-                            tweet.setRetweeted(true);
-                        }
-                        tweet.setFavoriteCount(favoriteCount);
-                        if (tweet.getRetweetedStatus() != null)
-                            tweet.getRetweetedStatus().setFavoriteCount(favoriteCount);
-                        updateTweetInAdapter(tweet);
-                    }
-
-                    @Override
-                    public void onError(Error error) {
-                        Toast.makeText(getActivity(), "Can't retweet", Toast.LENGTH_SHORT).show();
-                        updateTweetInAdapter(tweet);
-                    }
-                });
-
+                retweet(tweet);
             }
 
             @Override
@@ -239,6 +198,55 @@ public abstract class TweetsListFragment extends Fragment {
         });
         // Configure the refreshing colors
         mSwipeToRefresh.setColorSchemeResources(android.R.color.holo_blue_light, android.R.color.holo_blue_dark);
+    }
+
+    private void retweet(final Tweet tweet) {
+
+        if (!CheckNetwork.isOnline()) {
+            Toast.makeText(getActivity(), "No internet connection", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        final RetweetRequest request = new RetweetRequest();
+        if (tweet.isRetweeted()) {
+            // set retweet
+            request.setRetweet(true);
+            request.setTweetId(tweet.getRetweetedStatus() != null ? tweet.getRetweetedStatus().getTweetId() : tweet.getTweetId());
+        } else {
+            // Retweet
+            request.setRetweet(false);
+            request.setTweetId(tweet.getTweetId());
+        }
+
+        mTwitterClient.retweet(request, new RetweetCallback() {
+            @Override
+            public void onSuccess(Tweet retweet) {
+                // Weird bug ... this request does not return the favorites information
+                // Fix
+                int favoriteCount = tweet.getRetweetedStatus() != null ? tweet.getRetweetedStatus().getFavoriteCount() : tweet.getFavoriteCount();
+
+                if (request.isRetweet()) {
+                    tweet.setRetweetCount(tweet.getRetweetCount() - 1);
+                    tweet.setRetweetedStatus(null);
+                    tweet.setRetweeted(false);
+                } else {
+                    tweet.setRetweetCount(tweet.getRetweetCount() + 1);
+                    tweet.setRetweetedStatus(retweet);
+                    tweet.setRetweeted(true);
+                }
+                tweet.setFavoriteCount(favoriteCount);
+                if (tweet.getRetweetedStatus() != null)
+                    tweet.getRetweetedStatus().setFavoriteCount(favoriteCount);
+                updateTweetInAdapter(tweet);
+            }
+
+            @Override
+            public void onError(Error error) {
+                Toast.makeText(getActivity(), "Can't retweet", Toast.LENGTH_SHORT).show();
+                updateTweetInAdapter(tweet);
+            }
+        });
+
     }
 
     private void openProfile(User user) {
@@ -397,6 +405,29 @@ public abstract class TweetsListFragment extends Fragment {
     public int getLayout() {
         return R.layout.fragments_tweets_list;
     }
+
+    /* EventBus */
+    @Override
+    public void onResume() {
+        super.onResume();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onPause() {
+        EventBus.getDefault().unregister(this);
+        super.onPause();
+    }
+
+    @Subscribe
+    public void onEvent(TweetEvent event) {
+        if (event.getTweet().getUser().equals(UserInfo.getInstance().getUserInfo())) {
+            mTweets.add(0, event.getTweet());
+            tweetAdapter.notifyDataSetChanged(mTweets);
+            mLayoutManager.scrollToPosition(0);
+        }
+    }
+/* EventBus */
 }
 
 

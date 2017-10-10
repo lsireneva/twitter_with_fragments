@@ -25,7 +25,9 @@ import com.example.luba.twitterwithfragments.fragments.HomeTimeLineFragment;
 import com.example.luba.twitterwithfragments.fragments.NewTweetDialogFragment;
 import com.example.luba.twitterwithfragments.models.Tweet;
 import com.example.luba.twitterwithfragments.models.User;
+import com.example.luba.twitterwithfragments.utils.TweetEvent;
 
+import org.greenrobot.eventbus.EventBus;
 import org.parceler.Parcels;
 
 public class TwitterActivity extends BaseActivity implements NewTweetDialogFragment.OnNewTweetDialogFragmentListener {
@@ -154,6 +156,7 @@ public class TwitterActivity extends BaseActivity implements NewTweetDialogFragm
     @Override
     public void onTimeLineChanged(Tweet tweet) {
         Log.d ("DEBUG", "onTimeLineChanged"+ tweet);
+        EventBus.getDefault().post(new TweetEvent(tweet));
         fragmentHomeTimeLine = (HomeTimeLineFragment) adapterViewPager.getRegisteredFragment(0);
         fragmentHomeTimeLine.insertTweetAtTop(tweet);
         fragmentHomeTimeLine.loadTweets(null,null);

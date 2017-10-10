@@ -127,6 +127,7 @@ public class TweetAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         public TextView tvCreatedAt;
         public  TextView tvName, tvRetweetCount, tvFavoriteCount;
         public ImageView btnReply,  btnRetweet, btnFavorite;
+        ProgressBar pbRetweet, pbFavorite;
 
         public TweetViewHolder(View itemView) {
             super(itemView);
@@ -142,6 +143,8 @@ public class TweetAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             btnFavorite = (ImageView) itemView.findViewById(R.id.btnFavorite);
             tvRetweetCount = (TextView) itemView.findViewById(R.id.tvRetweetCount);
             tvFavoriteCount = (TextView) itemView.findViewById(R.id.tvFavoriteCount);
+            pbRetweet = (ProgressBar) itemView.findViewById(R.id.pb_retweet);
+            pbFavorite = (ProgressBar) itemView.findViewById(R.id.pb_favorite);
 
 
             itemView.setOnClickListener(new View.OnClickListener() {
@@ -170,7 +173,8 @@ public class TweetAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             btnRetweet.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    //pbRetweet.setVisibility(View.VISIBLE);
+                    pbRetweet.setVisibility(View.VISIBLE);
+                    tvRetweetCount.setVisibility(View.GONE);
                     if (mListener != null) mListener.selectedRetweet(tweet, tvRetweetCount, btnRetweet);
                 }
             });
@@ -178,7 +182,8 @@ public class TweetAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             btnFavorite.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    //pbFavorite.setVisibility(View.VISIBLE);
+                    pbFavorite.setVisibility(View.VISIBLE);
+                    tvFavoriteCount.setVisibility(View.GONE);
                     if (mListener != null) mListener.selectedAsFavorite(tweet, tvFavoriteCount, btnFavorite);
                 }
             });
@@ -195,9 +200,12 @@ public class TweetAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             tvBody.setText(tweet.getText());
 
             tvCreatedAt.setText(tweet.getRelativeTimeAgo());
-            tvRetweetCount.setText(String.valueOf(tweet.getRetweetCount()));
-            tvFavoriteCount.setText(String.valueOf(tweet.getFavoriteCount()));
 
+            Glide.with(ivProfileImage.getContext())
+                    .load(tweet.getUser().getProfileImageUrl())
+                    .placeholder(R.drawable.ic_twitter)
+                    .bitmapTransform(new RoundedCornersTransformation(ivProfileImage.getContext(), 3, 3))
+                    .into(ivProfileImage);
 
 
             if (tweet.isRetweeted()) {
@@ -207,15 +215,20 @@ public class TweetAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             if (tweet.isFavorite())  {
                 btnFavorite.setBackgroundResource(R.drawable.ic_favorite_clicked);}
 
+            pbRetweet.setVisibility(View.GONE);
+            tvRetweetCount.setVisibility(View.VISIBLE);
+            //tvRetweetCount.setText(String.valueOf(tweet.getRetweetedStatus() != null ? tweet.getRetweetedStatus().getRetweetCount() : tweet.getRetweetCount()));
+            tvRetweetCount.setText(String.valueOf(tweet.getRetweetCount()));
+
+            pbFavorite.setVisibility(View.GONE);
+            tvFavoriteCount.setVisibility(View.VISIBLE);
+            //tvFavoriteCount.setText(String.valueOf(tweet.getRetweetedStatus() != null ? tweet.getRetweetedStatus().getFavoriteCount() : tweet.getFavoriteCount()));
+            tvFavoriteCount.setText(String.valueOf(tweet.getFavoriteCount()));
 
 
-            Glide.with(ivProfileImage.getContext())
-                    .load(tweet.getUser().getProfileImageUrl())
-                    .placeholder(R.drawable.ic_twitter)
-                    .bitmapTransform(new RoundedCornersTransformation(ivProfileImage.getContext(), 3, 3))
-                    .into(ivProfileImage);
 
-
+            //tvRetweetCount.setText(String.valueOf(tweet.getRetweetCount()));
+            //tvFavoriteCount.setText(String.valueOf(tweet.getFavoriteCount()));
 
         }
     }
